@@ -66,6 +66,12 @@ label {
 
 /* top table ================================================================ */
 
+#loading span {
+  display: block;
+  max-width: 8em;
+  margin: 2em auto;
+  text-align: center;
+}
 .spinner {
   width: 32px;
   height: 32px;
