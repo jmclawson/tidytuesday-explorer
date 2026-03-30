@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1 class="headline">TidyTuesday Explorer</h1>
+        <span class="headline">Search, compare, and explore variables across TidyTuesday datasets.</span>
+        <p class="headline" id="meta"></p>
+
+        <!-- Column searcher -->
+        <div id="searcherform">
+            <div class="formgroup" id="search_label">
+                Search:
+            </div>
+            <div class="formgroup">
+                <label for="pickColumn">Column</label>
+                <select id="pickColumn">
+                  <option value="variable_norm">variable</option>
+                  <option value="variable_description">variable_description</option>
+                  <option value="dataset_title">dataset_title</option>
+                  <option value="source_file">source_file</option>
+                </select>
+            </div>
+            <div class="formgroup">
+                <label for="searchVariable">Term</label>
+                <input id="searchVariable" value="year">
+            </div>
+            <div class="formgroup">
+                <label for="numResults">Limit</label>
+                <input id="numResults" type="number" min="1" step="1" value="10" style="width: 60px;">
+            </div>
+            <div class="formgroup" id="resultOrder">
+                <label for="orderDesc">
+                    <input id="orderDesc" type="radio" name="order" value="DESC" checked="checked"> Newest first
+                </label>
+
+                <label for="orderAsc">
+                    <input id="orderAsc" type="radio" name="order" value="ASC"> Oldest first
+                </label>
+            </div>
+        </div>
+
+        <!-- Top table -->
+        <div id="tableHere"></div>
+
+        <!-- Breadcrumbs -->
+        <div id="pathHere">
+            <div id="path_label">Path:</div>
+            <div id="innerPath"></div>
+        </div>
+
+        <!-- Bottom table -->
+        <div id="moreHere"></div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <span id="left-foot">
+                Data from the <a href="https://github.com/rfordatascience/tidytuesday" target="_blank">TidyTuesday project</a>.
+            </span>
+            <span id="right-foot">
+                <a href="https://github.com/jmclawson/tidytuesday-explorer" target="_blank">View this project on GitHub</a>.
+            </span>
+        </footer>
+
+        <script type="module" src="explorer.js"></script>
+    </body>
+</html>

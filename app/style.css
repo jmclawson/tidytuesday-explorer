@@ -1,0 +1,181 @@
+/* shared =================================================================== */
+
+body {
+    width: 90%;
+    max-width: 960px;
+    padding: 1em 0;
+    margin: 0 auto;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif !important;
+}
+label, #pathHere span::before {
+    display: block;
+    color: #666666;
+    text-transform: lowercase;
+}
+#search_label, #path_label {
+    padding: 1em;
+}
+#tableHere table, #moreHere table, #innerPath {
+    font-family: 'Consolas', 'Courier New', Courier, monospace;
+    margin-bottom: 1em;
+}
+#tableHere tbody tr:hover, #moreHere tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+#tableHere th, #moreHere th, #tableHere td, #moreHere td {
+    padding: 0.1em 0.5em;
+}
+
+/* tiptop =================================================================== */
+
+span.headline {
+    display: block;
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+}
+.headline#meta {
+    color: #888888;
+    display: block;
+    margin: -1.5em 0 1.5em 0 ;
+    font-size: 1.2em;
+}
+
+/* searcher controls ======================================================== */
+
+label {
+    display: block;
+    margin-bottom: 0px;
+    text-align: left;
+    text-transform: lowercase;
+    /* font-variant: small-caps; */
+}
+#searcherform {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+.formgroup {
+    display: inline-block;
+    padding: 0 0.25em;
+}
+#resultOrder input, #resultOrder label {
+    display: inline-block;
+}
+
+/* top table ================================================================ */
+
+/* breadcrumb =============================================================== */
+
+#pathHere span::before {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+#pathHere div#path_label {
+    white-space: nowrap;
+}
+#pathHere div#innerPath {
+    flex: 1;
+    min-width: 0;
+}
+#pathHere.has-content {
+    display: flex;
+}
+#pathHere {
+    display: none;
+    align-items: baseline;
+    gap: 0.5em;
+    margin-top: -1.7em;
+    padding: 20px 0 0 0;
+    line-height: 2.5em;
+}
+#pathHere b:nth-child(1) {
+    display: none;
+}
+#pathHere span {
+    display: inline;
+    padding: 0.2em 0.4em;
+    margin: 2em 0.1em 0 0.1em;
+    position: relative;
+}
+#pathHere span:hover {
+    filter: brightness(120%);
+    cursor: pointer;
+}
+#pathHere span::before {
+    display: none;
+}
+#pathHere span:nth-child(-n + 4)::before {
+    display: block;
+}
+#pathHere span.variable {
+    background-color: aquamarine;
+}
+#pathHere span::before {
+    position: absolute;
+    top: -1.75em;
+    left: 0;
+}
+#pathHere span.variable::before {
+    content: "variable";
+}
+#pathHere span.dataset_id {
+    background-color: rgb(133, 169, 235);
+}
+#pathHere span.dataset_id::before {
+    content: "dataset";
+}
+
+/* bottom table ============================================================= */
+
+#moreHere.empty {
+    display: none;
+}
+#moreHere .more_header {
+    font-size: 1.5em;
+    display: block;
+    margin: 0 0 0.7em 0;
+}
+#moreHere .more_footer {
+    font-size: 1em;
+    font-style: italic;
+    display: block;
+    margin: 0.7em 0 0 0;
+}
+#moreHere.notempty {
+    border: 1px dotted gray;
+    border-radius: 2%;
+    padding: 0.2em 0.5em;
+}
+#moreHere .more_subheader {
+    font-size: 1em;
+    font-style: italic;
+    display: block;
+    margin: -1em 0 0.7em 0;
+}
+
+/* footer =================================================================== */
+
+#left-foot {
+    float: left;
+}
+#right-foot {
+    float: right;
+}
+
+/* unused =================================================================== */
+
+/* .subheader {
+    font-size: 1em;
+    font-style: italic;
+    display: block;
+    margin: 0 0 0.7em 0;
+} 
+.download {
+    display: block;
+    margin-bottom: 2.5em;
+}
+.download a {
+    float: right;
+    margin-top: -0.5em;
+} */
