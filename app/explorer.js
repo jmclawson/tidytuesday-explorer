@@ -26,18 +26,19 @@ async function setup() {
         mainModule: new URL("./duckdb/duckdb-eh.wasm", window.location.href).toString(),
         mainWorker: new URL("./duckdb/duckdb-browser-eh.worker.js", window.location.href).toString(),
     };
-    
+
     const worker = new Worker(bundle.mainWorker);
     const db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), worker);
-    
+
     await db.instantiate(bundle.mainModule);
     conn = await db.connect();
 
+    const parquetUrl = new URL("./data/tt_columns.parquet", window.location.href).toString();
+
     await conn.query(`
         CREATE VIEW variables AS
-        SELECT * FROM parquet_scan('./data/tt_columns.parquet')
+        SELECT * FROM parquet_scan('${parquetUrl}')
     `);
-
 
     const meta_vars_result = await conn.query(`
         SELECT COUNT(*) as n_rows
