@@ -23,8 +23,8 @@ let meta_sets;
 
 async function setup() {
     const bundle = {
-        mainModule: "/duckdb/duckdb-eh.wasm",
-        mainWorker: "/duckdb/duckdb-browser-eh.worker.js",
+        mainModule: "./duckdb/duckdb-eh.wasm",
+        mainWorker: "./duckdb/duckdb-browser-eh.worker.js",
     };
     const worker = new Worker(bundle.mainWorker);
     const db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), worker);
@@ -34,7 +34,7 @@ async function setup() {
 
     await conn.query(`
         CREATE VIEW variables AS
-        SELECT * FROM parquet_scan('http://localhost:8000/data/tt_columns.parquet')
+        SELECT * FROM parquet_scan('./data/tt_columns.parquet')
     `);
 
 
