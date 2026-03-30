@@ -8,18 +8,14 @@ const breadcrumb = document.getElementById("innerPath");
 const moreOutput = document.getElementById("moreHere");
 const limitInput = document.getElementById("numResults");
 
-
 let dlContext;
 let dlValue;
 
-
 let conn;
-
 
 let meta_vars;
 let meta_files;
 let meta_sets;
-
 
 async function setup() {
     const bundle = {
@@ -53,15 +49,12 @@ async function setup() {
         FROM variables;
     `);
 
-
     const meta_sets = meta_sets_result.toArray()[0].n_sets;
     const meta_files = meta_files_result.toArray()[0].n_files;
     const meta_vars = meta_vars_result.toArray()[0].n_rows.toLocaleString();
 
-
     metaHeader.innerHTML = `${meta_sets} datasets &bull; ${meta_files} files &bull; ${meta_vars} variables`;
 }
-
 
 async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     const result = await conn.query(`
@@ -74,13 +67,11 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     
     const rows = result.toArray();
     
-
     if (rows.length === 0) {
         output.innerText = "No results";
         return;
     }
     
-
     output.innerHTML = "";  // clear previous content
     breadcrumb.innerHTML = "";  // clear previous content
     breadcrumb_outer.classList.remove("has-content");
@@ -92,7 +83,6 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     output.appendChild(subHeader)
     output.appendChild(renderTable(rows, "startingpoint"));
 }
-
 
 function renderTable(rows, drillview) {
     let clear_breadcrumb;
@@ -110,25 +100,20 @@ function renderTable(rows, drillview) {
     }
     const table = document.createElement("table");
     
-
     const headers = Object.keys(rows[0]);
     
-
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     
-
     headers.forEach(h => {
         const th = document.createElement("th");
         th.textContent = h;
         headerRow.appendChild(th);
     });
     
-
     thead.appendChild(headerRow);
     table.appendChild(thead);
     
-
     const tbody = document.createElement("tbody");
     const orderDir = document.querySelector('input[name="order"]:checked').value;
     
@@ -142,14 +127,12 @@ function renderTable(rows, drillview) {
             drillDown(row, drillview, nextView, orderDir);
         });
     
-
         headers.forEach(h => {
             const td = document.createElement("td");
             td.textContent = row[h];
             tr.appendChild(td);
         });
     
-
         tbody.appendChild(tr);
     });
 
@@ -158,12 +141,10 @@ function renderTable(rows, drillview) {
     return table;
 }
 
-
 function renderBreadcrumb(row, drillview, nextView) {
     const crumb = document.createElement("span");
     crumb.textContent = row[drillview];
     crumb.classList.add(drillview);
-
 
     crumb.addEventListener("click", () => {
         let next = crumb.nextSibling;
@@ -179,7 +160,6 @@ function renderBreadcrumb(row, drillview, nextView) {
         })
     return crumb
 }
-
 
 async function drillDown(row, drillview, nextView, searchOrder) {
     let result;
@@ -202,10 +182,8 @@ async function drillDown(row, drillview, nextView, searchOrder) {
             LIMIT 20
         `);
     }
-            
 
     const detailRows = result.toArray();
-            
 
     // update breadcrumb
     const breadcrumbArrow = document.createElement("b");
@@ -213,7 +191,6 @@ async function drillDown(row, drillview, nextView, searchOrder) {
     breadcrumb_outer.classList.add("has-content");
     breadcrumb.appendChild(breadcrumbArrow);
     breadcrumb.appendChild(renderBreadcrumb(row, drillview, nextView));
-            
 
     // update table
     moreOutput.classList.remove("empty");
@@ -228,7 +205,6 @@ async function drillDown(row, drillview, nextView, searchOrder) {
     moreHeader.classList.add("more_header");
     moreOutput.appendChild(moreHeader);
 
-
     const n_rows_result = await conn.query(`
         SELECT COUNT(*) as n_rows
         FROM variables
@@ -237,7 +213,6 @@ async function drillDown(row, drillview, nextView, searchOrder) {
     
     const n_rows = n_rows_result.toArray()[0].n_rows;
 
-
     let result_label;
     if (nextView == "variable") {
         result_label = "variables";
@@ -245,11 +220,9 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         result_label = "datasets";
     }
 
-
     if (n_rows < 2) {
         result_label = result_label.slice(0, -1);
     }
-
 
     let n_results;
     if (n_rows > 20) {
@@ -258,11 +231,9 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         n_results = `${n_rows} ${result_label}`;
     }
 
-
     const moreSubheader = document.createElement("span");
     // moreSubheader.textContent = `Limited to 20. Click a row to explore by ${nextView}.`;
     const url_repo = "https://github.com/rfordatascience/tidytuesday";
-
 
     let dl_filename
     let dl_descriptor
@@ -274,16 +245,13 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         dl_descriptor = "results"
     }
 
-
     const download_link = document.createElement("span");
     download_link.classList.add("download");
     const dl_link = document.createElement("a");
     dl_link.href = "#";
     dl_link.textContent = "Download the " + dl_descriptor;
 
-
     download_link.appendChild(dl_link);
-
 
     moreSubheader.append(`${n_results}. `);
     moreSubheader.append(dl_link);
@@ -295,12 +263,10 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         
         const url = [url_repo, url_data, url_year, url_dir].join("/");
 
-
         const repo = document.createElement("a");
         repo.href = url;
         repo.target = "_blank";
         repo.textContent = "this dataset on GitHub";
-
 
         moreSubheader.append("find ", repo, ", or click a row to find datasets with that variable.");
     } else if (drillview === "variable") {
@@ -309,14 +275,12 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         repo.target = "_blank";
         repo.textContent = "TidyTuesday project on GitHub";
 
-
         moreSubheader.append("visit the ", repo, ", or click a row to explore that dataset.");
     }
     moreSubheader.classList.add("more_subheader");
     moreOutput.appendChild(moreSubheader);
     
     moreOutput.appendChild(renderTable(detailRows, nextView));
-
 
     dl_link.addEventListener("click", () => {
         downloadQueryAsCSV(`
@@ -326,22 +290,17 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         `, dl_filename);
     });
 
-
     moreOutput.appendChild(download_link);
 }
 
-
-// I had help to write this part!
 async function downloadQueryAsCSV(query, filename = "results.csv") {
     const result = await conn.query(query);
     const rows = result.toArray();
             
-
     if (rows.length === 0) {
         alert("No data to download.");
         return;
     }
-            
 
     // Convert to CSV
     const headers = Object.keys(rows[0]);
@@ -352,22 +311,18 @@ async function downloadQueryAsCSV(query, filename = "results.csv") {
         )
     ].join("\n");
             
-
     // Create downloadable blob
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
             
-
     // Trigger download
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     a.click();
             
-
     URL.revokeObjectURL(url);
 }
-
 
 searchColumn.addEventListener("input", () => {
     const limit = Number(limitInput.value) || 10;
@@ -379,7 +334,6 @@ searchColumn.addEventListener("input", () => {
         limit);
 });
 
-
 searchInput.addEventListener("input", () => {
     const limit = Number(limitInput.value) || 10;
     const orderDir = document.querySelector('input[name="order"]:checked').value;
@@ -389,7 +343,6 @@ searchInput.addEventListener("input", () => {
         orderDir, 
         limit);
 });
-
 
 limitInput.addEventListener("change", () => {
     const limit = Number(limitInput.value) || 10;
@@ -401,12 +354,10 @@ limitInput.addEventListener("change", () => {
         limit);
 });
 
-
 document.querySelectorAll('input[name="order"]').forEach(radio => {
     radio.addEventListener("change", () => {
         const limit = Number(limitInput.value) || 10;
         const orderDir = document.querySelector('input[name="order"]:checked').value;
-            
 
         runQuery(
             searchColumn.value,
