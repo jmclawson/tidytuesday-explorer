@@ -23,14 +23,15 @@ let meta_sets;
 
 async function setup() {
     const bundle = {
-        mainModule: "./duckdb/duckdb-eh.wasm",
-        mainWorker: "./duckdb/duckdb-browser-eh.worker.js",
+        mainModule: new URL("./duckdb/duckdb-eh.wasm", window.location.href),
+        mainWorker: new URL("./duckdb/duckdb-browser-eh.worker.js", window.location.href),
     };
+    
     const worker = new Worker(bundle.mainWorker);
     const db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(), worker);
+    
     await db.instantiate(bundle.mainModule);
     conn = await db.connect();
-            
 
     await conn.query(`
         CREATE VIEW variables AS
