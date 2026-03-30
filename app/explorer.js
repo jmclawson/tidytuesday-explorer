@@ -23,8 +23,8 @@ let meta_sets;
 
 async function setup() {
     const bundle = {
-        mainModule: new URL("./duckdb/duckdb-eh.wasm", window.location.href),
-        mainWorker: new URL("./duckdb/duckdb-browser-eh.worker.js", window.location.href),
+        mainModule: new URL("./duckdb/duckdb-eh.wasm", window.location.href).toString(),
+        mainWorker: new URL("./duckdb/duckdb-browser-eh.worker.js", window.location.href).toString(),
     };
     
     const worker = new Worker(bundle.mainWorker);
