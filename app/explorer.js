@@ -320,8 +320,7 @@ async function drillDown(row, drillview, nextView, searchOrder) {
 
     dl_link.addEventListener("click", () => {
         downloadQueryAsCSV(`
-            SELECT dataset_id, dataset_title, source_file, variable, variable_description
-            FROM variables
+            SELECT * FROM variables
             WHERE ${dlContext} = '${dlValue}'
             ORDER BY dataset_id DESC
         `, dl_filename);
