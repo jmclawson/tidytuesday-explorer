@@ -374,8 +374,8 @@ def get_years(start=2018, end=2016, datadir=TT_DATA):
 
     return all_flat_sorted
 
-def get_years_columnar(start=2018, end=2016):
-    all_data = get_years(start, end)
+def get_years_columnar(start=2018, end=2016, datadir=TT_DATA):
+    all_data = get_years(start, end, datadir)
     
     df_columns = pd.DataFrame(all_data)
 
