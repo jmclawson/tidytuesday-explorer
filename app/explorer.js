@@ -18,6 +18,8 @@ let meta_files;
 let meta_sets;
 
 async function setup() {
+    const loading = document.getElementById("loading");
+
     const bundle = {
         mainModule: new URL("./duckdb/duckdb-eh.wasm", window.location.href).toString(),
         mainWorker: new URL("./duckdb/duckdb-browser-eh.worker.js", window.location.href).toString(),
@@ -54,6 +56,7 @@ async function setup() {
     const meta_vars = meta_vars_result.toArray()[0].n_rows.toLocaleString();
 
     metaHeader.innerHTML = `${meta_sets} datasets &bull; ${meta_files} files &bull; ${meta_vars} variables`;
+    loading.style.display = "none";
 }
 
 async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
