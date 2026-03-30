@@ -1,0 +1,45 @@
+name: Refresh TidyTuesday data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * 2"   # 2sday at 10AM UTC
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Download TidyTuesday data
+        run: |
+          mkdir -p tmp
+          curl -L https://github.com/rfordatascience/tidytuesday/archive/refs/heads/main.zip -o tmp/tt.zip
+          unzip -q tmp/tt.zip -d tmp
+          mv tmp/tidytuesday-main/data tmp/tt_data
+
+          rm -rf tmp/tidytuesday-main tmp/tt.zip
+
+      - name: Build Parquet
+        run: |
+          python scripts/parse_columns.py \
+            --data-dir ./tmp/tt_data \
+            --output app/data/tt_columns.parquet
+
+      - name: Inspect output
+        run: |
+          ls -lh app/data/
