@@ -236,7 +236,7 @@ async function drillDown(row, drillview, nextView, searchOrder) {
 
     const moreSubheader = document.createElement("span");
     // moreSubheader.textContent = `Limited to 20. Click a row to explore by ${nextView}.`;
-    const url_repo = "https://github.com/rfordatascience/tidytuesday";
+    const url_repo = "https://tidytues.day";
 
     let dl_filename
     let dl_descriptor
@@ -260,23 +260,24 @@ async function drillDown(row, drillview, nextView, searchOrder) {
     moreSubheader.append(dl_link);
     moreSubheader.append(", ");
     if (drillview === "dataset_id") {
-        const url_data = "tree/main/data";
+        // const url_data = "tree/main/data";
         const url_year = row["dataset_id"].slice(0, 4);
         const url_dir = row["dataset_id"];
         
-        const url = [url_repo, url_data, url_year, url_dir].join("/");
+        // const url = [url_repo, url_data, url_year, url_dir].join("/");
+        const url = [url_repo, url_year, url_dir].join("/");
 
         const repo = document.createElement("a");
         repo.href = url;
         repo.target = "_blank";
-        repo.textContent = "this dataset on GitHub";
+        repo.textContent = "this dataset online";
 
         moreSubheader.append("find ", repo, ", or click a row to find datasets with that variable.");
     } else if (drillview === "variable") {
         const repo = document.createElement("a");
         repo.href = url_repo;
         repo.target = "_blank";
-        repo.textContent = "TidyTuesday project on GitHub";
+        repo.textContent = "TidyTuesday project";
 
         moreSubheader.append("visit the ", repo, ", or click a row to explore that dataset.");
     }
