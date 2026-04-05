@@ -15,7 +15,7 @@
             <div class="formgroup">
                 <label for="pickColumn">Column</label>
                 <select id="pickColumn">
-                  <option value="variable_norm">variable</option>
+                  <option value="variable">variable</option>
                   <option value="variable_description">variable_description</option>
                   <option value="dataset_title">dataset_title</option>
                   <option value="source_file">source_file</option>
@@ -38,10 +38,118 @@
                     <input id="orderAsc" type="radio" name="order" value="ASC"> Oldest first
                 </label>
             </div>
+            <div class="formgroup" id="tweakform">
+                <details>
+                    <summary>Options</summary>
+                    <div class="optionsPopup">
+                        <div class="adv_box" id="togglecols">
+                            <h3>Columns</h3>
+                            <label>
+                                <input type="checkbox" id="showTitle" checked>
+                                dataset title
+                            </label>
+                            <label>
+                                <input type="checkbox" id="showSection">
+                                doc section
+                            </label>
+                            <label>
+                                <input type="checkbox" id="showSource">
+                                source file
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="showMatch">
+                                source match
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="showVariable" checked>
+                                variable
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="showDescription" checked>
+                                variable description
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="showInSource">
+                                in source
+                            </label>
+                        
+                        </div>
+                        <div class="adv_box" id="searchparams">
+                            <h3>Search</h3>
+
+                            <label>
+                                <input type="checkbox" id="caseInsensitive" checked>
+                                Ignore case
+                            </label>
+
+                            <fieldset>
+                                <legend>Look</legend>
+
+                                <label for="searchContains">
+                                    <input id="searchContains" type="radio" name="searchKind" value="contains" checked="checked"> anywhere in column
+                                </label>
+
+                                <label for="searchStarts">
+                                    <input id="searchStarts" type="radio" name="searchKind" value="starts"> at start of column
+                                </label>
+
+                                <label for="searchEnds">
+                                    <input id="searchEnds" type="radio" name="searchKind" value="ends"> at end of column
+                                </label>
+
+                                <label for="searchExact">
+                                    <input id="searchExact" type="radio" name="searchKind" value="match"> exact match only
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="adv_box" id="filterparams">
+                            <h3>Filter</h3>
+                            <label for="filterAny">
+                                <input id="filterAny" type="radio" name="sourceFilter" value="all" checked="checked"> all variables
+                            </label>
+
+                            <label for="filterTrue">
+                                <input id="filterTrue" type="radio" name="sourceFilter" value="true"> variables in source
+                            </label>
+
+                            <label for="filterFalse">
+                                <input id="filterFalse" type="radio" name="sourceFilter" value="false"> variables not in source
+                            </label>
+                        </div>
+                        <div class="adv_box">
+                            <h3>Table Views</h3>
+                            <label>
+                                <input id="pinstripe" type="checkbox" checked>
+                                Pinstripe rows
+                            </label>
+                            <fieldset>
+                                <legend>Wide columns should</legend>
+
+                                <label>
+                                    <input id="wordWrap" type="radio" name="wideResp" value="wrap" checked="checked"> Wrap across lines
+                                </label>
+
+                                <label for="scrollTable">
+                                    <input id="scrollTable" type="radio" name="wideResp" value="scroll"> Fit with scrolling
+                                </label>
+
+                                <label for="truncateCols">
+                                    <input id="truncateCols" type="radio" name="wideResp" value="truncate"> Truncate to fit
+                                </label>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </details>
+            </div>
         </div>
 
         <!-- Top table -->
-        <div id="tableHere">
+        <div id="tableHere" class="pinstripe">
             <div id="loading">
                 <div class="spinner"></div>
                 <span><a href="https://tidytues.day/2023/2023-10-24">Patient Risk Profiles</a> is a dataset. <b><i>Patience</i> is a virtue.</b> (Loading&hellip;)</span>

@@ -43,30 +43,96 @@ async function setup() {
         FROM variables
     `);
     const meta_files_result = await conn.query(`
-        SELECT COUNT(DISTINCT source_file) AS n_files
-        FROM variables;
+        SELECT COUNT(*) AS n_files
+        FROM (
+            SELECT DISTINCT dataset_id, source_file
+            FROM variables
+        ) t;
     `);
     const meta_sets_result = await conn.query(`
         SELECT COUNT(DISTINCT dataset_id) AS n_sets
         FROM variables;
     `);
 
-    const meta_sets = meta_sets_result.toArray()[0].n_sets;
-    const meta_files = meta_files_result.toArray()[0].n_files;
+    const meta_sets = meta_sets_result.toArray()[0].n_sets.toLocaleString();
+    const meta_files = meta_files_result.toArray()[0].n_files.toLocaleString();
     const meta_vars = meta_vars_result.toArray()[0].n_rows.toLocaleString();
 
-    metaHeader.innerHTML = `${meta_sets} datasets &bull; ${meta_files} files &bull; ${meta_vars} variables`;
+    metaHeader.innerHTML = `${meta_sets} datasets &bull; ${meta_files} source files &bull; ${meta_vars} variables`;
     loading.style.display = "none";
 }
 
 async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
-    const result = await conn.query(`
-        SELECT dataset_id, dataset_title, variable, variable_description
-        FROM variables
-        WHERE ${searchCol} LIKE '%${searchTerm}%'
-        ORDER BY dataset_id ${searchOrder}
-        LIMIT ${limitNum}
-    `);
+    const selectedCols = ["dataset_id"];
+
+    if (document.getElementById("showTitle").checked) {
+        selectedCols.push("dataset_title");
+    }
+    if (document.getElementById("showSection").checked) {
+        selectedCols.push("doc_section");
+    }
+    if (document.getElementById("showSource").checked) {
+        selectedCols.push("source_file");
+    }
+    if (document.getElementById("showMatch").checked) {
+        selectedCols.push("source_match");
+    }
+    if (document.getElementById("showVariable").checked) {
+        selectedCols.push("variable");
+    }
+    if (document.getElementById("showDescription").checked) {
+        selectedCols.push("variable_description");
+    }
+    if (document.getElementById("showInSource").checked) {
+        selectedCols.push("in_source");
+    }
+
+    const columnsString = selectedCols.join(", ");
+    const source_filter = document.querySelector('input[name="sourceFilter"]:checked').value;
+    const likeOperator = document.getElementById("caseInsensitive").checked ? "ILIKE" : "LIKE";
+    
+    const matchMode = document.querySelector('input[name="searchKind"]:checked').value;
+    let searchPattern;
+    if (matchMode === "contains") {
+        searchPattern = `%${searchTerm}%`;
+    } else if (matchMode === "starts") {
+        searchPattern = `${searchTerm}%`;
+    } else if (matchMode === "ends") {
+        searchPattern = `%${searchTerm}`;
+    } else {
+        searchPattern = searchTerm;
+    }
+    
+    console.log("Operator:", likeOperator);
+    console.log("searchCol:", searchCol);
+    let result;
+    if (source_filter === "all") {
+        result = await conn.query(`
+            SELECT ${columnsString}
+            FROM variables
+            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
+            ORDER BY dataset_id ${searchOrder}
+            LIMIT ${limitNum}
+        `);
+    } else if (source_filter === "true"){
+        result = await conn.query(`
+            SELECT ${columnsString}
+            FROM variables
+            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
+              AND in_source = TRUE
+            ORDER BY dataset_id ${searchOrder}
+            LIMIT ${limitNum}
+        `);
+    } else {
+        result = await conn.query(`
+            SELECT ${columnsString}
+            FROM variables
+            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
+              AND in_source = FALSE
+            ORDER BY dataset_id ${searchOrder}
+            LIMIT ${limitNum}
+        `);
+    }
     
     const rows = result.toArray();
     
@@ -372,5 +438,131 @@ document.querySelectorAll('input[name="order"]').forEach(radio => {
     });
 });
 
+const ids = [
+    "showVariable",
+    "showDescription",
+    "showSource",
+    "showSection",
+    "showTitle",
+    "showMatch",
+    "showInSource",
+    "caseInsensitive",
+    "searchContains", "searchStarts", "searchEnds", "searchExact",
+    "filterAny", "filterTrue", "filterFalse"
+];
+
+ids.forEach(id => {
+    document.getElementById(id).addEventListener("input", handleChange);
+});
+
+function handleChange() {
+    const limit = Number(limitInput.value) || 10;
+    const orderDir = document.querySelector('input[name="order"]:checked').value;
+
+    runQuery(
+        searchColumn.value,
+        searchInput.value,
+        orderDir,
+        limit
+    );
+}
+
+// document.querySelectorAll('input[name="longKind"]').forEach(radio => {
+//     radio.addEventListener("change", () => {
+//         const behavior = document.querySelector('input[name="longKind"]:checked').value;
+
+//         if (behavior === "truncate") {
+//             output.classList.add("truncate");
+//         } else {
+//             output.classList.remove("truncate")
+//         }
+//     });
+// });
+
+// document.getElementById("xScroll").addEventListener("change", function () {
+//     if (this.checked) {
+//         output.classList.add("xScroll");
+//     } else {
+//         output.classList.remove("xScroll");
+//     }
+// });
+
+const widerTableForm = document.querySelectorAll('input[name="wideResp"]')
+
+// document.getElementById("wordWrap").addEventListener("change", function () {
+//     if (this.checked) {
+//         output.classList.add("wordWrap");
+//         output.classList.remove("xScroll");
+//         output.classList.remove("truncate");
+//         widerTableForm.forEach(radio => {
+//             radio.disabled = true;
+//             radio.checked = false;
+//         });
+//     } else {
+//         output.classList.remove("wordWrap");
+//         widerTableForm.forEach(radio => {
+//             radio.disabled = false;
+//         });
+//         document.getElementById("truncateCols").checked = true;
+//     }
+// });
+
+// document.getElementById("scrollTable").addEventListener("change", function () {
+//     if (this.checked) {
+//         output.classList.add("xScroll");
+//     } else {
+//         output.classList.remove("xScroll");
+//     }
+// });
+
+// document.getElementById("truncateCols").addEventListener("change", function () {
+//     if (this.checked) {
+//         output.classList.add("truncate");
+//     } else {
+//         output.classList.remove("truncate");
+//     }
+// });
+
+document.getElementById("pinstripe").addEventListener("change", function () {
+    if (this.checked) {
+        output.classList.add("pinstripe");
+    } else {
+        output.classList.remove("pinstripe");
+    }
+});
+
+document.querySelectorAll('input[name="wideResp"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+        const behavior = document.querySelector('input[name="wideResp"]:checked').value;
+
+        if (behavior === "wrap") {
+            output.classList.remove("xScroll")
+            output.classList.remove("truncate");
+            output.classList.add("wordWrap");
+        } 
+        else if (behavior === "truncate") {
+            output.classList.remove("xScroll")
+            output.classList.add("truncate");
+            output.classList.remove("wordWrap");
+        } else {
+            output.classList.add("xScroll")
+            output.classList.remove("truncate");
+            output.classList.remove("wordWrap");
+        }
+    });
+});
+
+const tweakContainer = document.getElementById('tweakform');
+const tweakDetails = tweakContainer.querySelector('details');
+const tweakSummary = tweakContainer.querySelector('summary');
+
+document.addEventListener('click', (event) => {
+    const clickedInside = tweakContainer.contains(event.target);
+    const clickedSummary = tweakSummary.contains(event.target);
+    if (!clickedInside) {
+        tweakDetails.removeAttribute('open');
+    }
+});
+
 await setup();
-await runQuery("variable_norm", "year", "DESC", 10);
+await runQuery("variable", "year", "DESC", 10);
