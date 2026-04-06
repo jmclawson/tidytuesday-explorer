@@ -20,7 +20,7 @@ label, #pathHere span::before, summary {
     margin-bottom: 1em;
 }
 #tableHere tbody tr:hover, #moreHere tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #eef;
     cursor: pointer;
 }
 #tableHere th, #moreHere th, #tableHere td, #moreHere td {
@@ -181,7 +181,7 @@ details[open] summary::before {
     table-layout: auto;
 }
 .pinstripe table tr:nth-child(even) {
-  background-color: #d2e2f2;
+  background-color: #f1f1f1;
 }
 
 /* breadcrumb =============================================================== */
