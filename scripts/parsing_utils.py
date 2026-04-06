@@ -140,7 +140,7 @@ def get_active_columns(directory):
 
     for source_file in source_files:
         if source_file.suffix == ".csv":
-            with open(source_file, newline="", encoding="utf-8", errors="replace") as f:
+            with open(source_file, newline="", encoding="utf-8-sig", errors="replace") as f:
                 reader = csv.reader(f)
                 for row in reader:
                     if any(cell.strip() for cell in row):
@@ -148,7 +148,7 @@ def get_active_columns(directory):
                         break
         
         elif source_file.suffix == ".tsv":
-            with open(source_file, newline="", encoding="utf-8", errors="replace") as f:
+            with open(source_file, newline="", encoding="utf-8-sig", errors="replace") as f:
                 reader = csv.reader(f, delimiter="\t")
                 column_names = [c.strip() for c in next(reader)]
         
