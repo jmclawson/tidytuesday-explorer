@@ -103,8 +103,8 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
         searchPattern = searchTerm;
     }
     
-    console.log("Operator:", likeOperator);
-    console.log("searchCol:", searchCol);
+    // console.log("Operator:", likeOperator);
+    // console.log("searchCol:", searchCol);
     let result;
     if (source_filter === "all") {
         result = await conn.query(`
@@ -179,7 +179,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
 
     let n_results;
     if (n_rows > limitNum) {
-        n_results = `Showing the first ${limitNum.toLocaleString()} ${limit_label} of ${n_rows.toLocaleString()}.`;
+        n_results = `${n_rows.toLocaleString()} ${result_label} (showing first ${limitNum.toLocaleString()}).`;
     } else {
         n_results = `${n_rows.toLocaleString()} ${result_label}.`;
     }
