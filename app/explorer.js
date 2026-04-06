@@ -140,6 +140,45 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
         output.innerText = "No results";
         return;
     }
+
+    // get number of results
+    let n_rows_result;
+    if (source_filter === "all") {
+        n_rows_result = await conn.query(`
+            SELECT COUNT(*) as n_rows
+            FROM variables
+            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
+        `)
+    } else if (source_filter === "true"){
+        n_rows_result = await conn.query(`
+            SELECT COUNT(*) as n_rows
+            FROM variables
+            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
+              AND in_source = TRUE
+        `)
+    } else {
+        n_rows_result = await conn.query(`
+            SELECT COUNT(*) as n_rows
+            FROM variables
+            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
+              AND in_source = FALSE
+        `)
+    }
+    
+    const n_rows = n_rows_result.toArray()[0].n_rows;
+
+    const result_label = "results"
+
+    if (n_rows < 2) {
+        result_label = result_label.slice(0, -1);
+    }
+
+    let n_results;
+    if (n_rows > limitNum) {
+        n_results = `${n_rows.toLocaleString()} ${result_label}, showing the first ${limitNum}.`;
+    } else {
+        n_results = `${n_rows.toLocaleString()} ${result_label}.`;
+    }
     
     output.innerHTML = "";  // clear previous content
     breadcrumb.innerHTML = "";  // clear previous content
@@ -147,7 +186,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     moreOutput.innerHTML = "";  // clear previous content
     moreOutput.classList.add("empty")
     const subHeader = document.createElement("span");
-    subHeader.textContent = `Click a row to explore by dataset.`;
+    subHeader.textContent = n_results + ` Click a row to explore by dataset.`;
     subHeader.classList.add("subheader")
     output.appendChild(subHeader)
     output.appendChild(renderTable(rows, "startingpoint"));
