@@ -168,14 +168,18 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     const n_rows = n_rows_result.toArray()[0].n_rows;
 
     const result_label = "results"
+    const limit_label = "results"
 
     if (n_rows < 2) {
         result_label = result_label.slice(0, -1);
     }
+    if (limitNum < 2) {
+        limit_label = result_label.slice(0, -1);
+    }
 
     let n_results;
     if (n_rows > limitNum) {
-        n_results = `${n_rows.toLocaleString()} ${result_label}, showing the first ${limitNum}.`;
+        n_results = `Showing the first ${limitNum.toLocaleString()} ${limit_label} of ${n_rows.toLocaleString()}.`;
     } else {
         n_results = `${n_rows.toLocaleString()} ${result_label}.`;
     }
