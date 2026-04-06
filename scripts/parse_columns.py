@@ -7,7 +7,7 @@ from duckdb_files import db_save_parquet
 # start with the first header in the file
 # if this first header is a level-1 header, it may be good
 # if not, be prepared to replace with first level 1 header
-# Do not keep "Data info" (or similars) as doc_section
+# Do not keep "Data info" (or similars) as readme_section
 
 # DATA_DIR = "tt_data"
 # OUTPUT_FILE = "tt_columns.parquet"

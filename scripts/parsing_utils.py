@@ -289,13 +289,13 @@ def build_dataset_index(directory):
         this_row = {
             "dataset_id": item["dataset_id"],
             "dataset_title": item["dataset_title"],
-            "doc_section": item["section"],
-            "source_file": this_file,
+            "readme_section": item["section"],
+            "source": this_file,
             "source_match": match_status,
             "variable": item["variable"],
             "variable_norm": normalize_variable(item["variable"]),
             "variable_description": item["description"],
-            "in_source": item["variable"].strip("`") in file_to_columns[this_file]
+            "variable_in_source": item["variable"].strip("`") in file_to_columns[this_file]
             }
         all_rows.append(this_row)
     return all_rows
@@ -326,13 +326,13 @@ def infer_dataset_index(directory):
         {
             "dataset_id": d["dataset"],
             "dataset_title": infer_dataset_title(d["file"]),
-            "doc_section": infer_section_title(d["file"]),
-            "source_file": d["file"],
+            "readme_section": infer_section_title(d["file"]),
+            "source": d["file"],
             "source_match": "exact",
             "variable": col,
             "variable_norm": normalize_variable(col),
             "variable_description": None,
-            "in_source": True,
+            "variable_in_source": True,
         }
         for d in active_columns
         for col in d["columns"]

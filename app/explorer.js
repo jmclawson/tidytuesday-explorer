@@ -45,7 +45,7 @@ async function setup() {
     const meta_files_result = await conn.query(`
         SELECT COUNT(*) AS n_files
         FROM (
-            SELECT DISTINCT dataset_id, source_file
+            SELECT DISTINCT dataset_id, source
             FROM variables
         ) t;
     `);
@@ -69,10 +69,10 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
         selectedCols.push("dataset_title");
     }
     if (document.getElementById("showSection").checked) {
-        selectedCols.push("doc_section");
+        selectedCols.push("readme_section");
     }
     if (document.getElementById("showSource").checked) {
-        selectedCols.push("source_file");
+        selectedCols.push("source");
     }
     if (document.getElementById("showMatch").checked) {
         selectedCols.push("source_match");
@@ -84,7 +84,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
         selectedCols.push("variable_description");
     }
     if (document.getElementById("showInSource").checked) {
-        selectedCols.push("in_source");
+        selectedCols.push("variable_in_source");
     }
 
     const columnsString = selectedCols.join(", ");
@@ -119,7 +119,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
             SELECT ${columnsString}
             FROM variables
             WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND in_source = TRUE
+              AND variable_in_source = TRUE
             ORDER BY dataset_id ${searchOrder}
             LIMIT ${limitNum}
         `);
@@ -128,7 +128,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
             SELECT ${columnsString}
             FROM variables
             WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND in_source = FALSE
+              AND variable_in_source = FALSE
             ORDER BY dataset_id ${searchOrder}
             LIMIT ${limitNum}
         `);
@@ -154,14 +154,14 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
             SELECT COUNT(*) as n_rows
             FROM variables
             WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND in_source = TRUE
+              AND variable_in_source = TRUE
         `)
     } else {
         n_rows_result = await conn.query(`
             SELECT COUNT(*) as n_rows
             FROM variables
             WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND in_source = FALSE
+              AND variable_in_source = FALSE
         `)
     }
     
@@ -279,7 +279,7 @@ async function drillDown(row, drillview, nextView, searchOrder) {
     dlValue = row[drillview]
     if (drillview === "variable") {
         result = await conn.query(`
-            SELECT dataset_id, dataset_title, source_file, variable_description
+            SELECT dataset_id, dataset_title, source, variable_description
             FROM variables
             WHERE ${drillview} = '${row[drillview]}'
             ORDER BY dataset_id ${searchOrder}
@@ -287,7 +287,7 @@ async function drillDown(row, drillview, nextView, searchOrder) {
         `);
     } else {
         result = await conn.query(`
-            SELECT source_file, variable, variable_description
+            SELECT source, variable, variable_description
             FROM variables
             WHERE ${drillview} = '${row[drillview]}'
             ORDER BY dataset_id ${searchOrder}
