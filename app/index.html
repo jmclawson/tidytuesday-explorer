@@ -68,13 +68,23 @@
                             </label>
 
                             <label>
+                                <input type="checkbox" id="showVariableNorm">
+                                normed variable
+                            </label>
+
+                            <label>
+                                <input type="checkbox" id="showVariableClass">
+                                variable class
+                            </label>
+
+                            <label>
                                 <input type="checkbox" id="showDescription" checked>
                                 variable description
                             </label>
 
                             <label>
                                 <input type="checkbox" id="showInSource">
-                                in source
+                                variable in source
                             </label>
                         
                         </div>
@@ -87,38 +97,56 @@
                             </label>
 
                             <fieldset>
-                                <legend>Scope</legend>
+                                <legend>Match type</legend>
 
                                 <label for="searchContains">
-                                    <input id="searchContains" type="radio" name="searchKind" value="contains" checked="checked"> anywhere in column
+                                    <input id="searchContains" type="radio" name="searchKind" value="contains" checked="checked"> anywhere
                                 </label>
 
                                 <label for="searchStarts">
-                                    <input id="searchStarts" type="radio" name="searchKind" value="starts"> at start of column
+                                    <input id="searchStarts" type="radio" name="searchKind" value="starts"> starts with
                                 </label>
 
                                 <label for="searchEnds">
-                                    <input id="searchEnds" type="radio" name="searchKind" value="ends"> at end of column
+                                    <input id="searchEnds" type="radio" name="searchKind" value="ends"> ends with
                                 </label>
 
                                 <label for="searchExact">
-                                    <input id="searchExact" type="radio" name="searchKind" value="match"> exact match only
+                                    <input id="searchExact" type="radio" name="searchKind" value="match"> exact
                                 </label>
                             </fieldset>
                         </div>
                         <div class="options_box" id="filterparams">
                             <h3>Filter</h3>
-                            <label for="filterAny">
-                                <input id="filterAny" type="radio" name="sourceFilter" value="all" checked="checked"> all variables
-                            </label>
+                            <fieldset>
+                                <legend>Source file matching</legend>
+                                <label for="filterFileExact">
+                                    <input id="filterFileExact" type="checkbox" name="sourceFileFilter" value="exact" checked="checked"> exact matches
+                                </label>
+                            
+                                <label for="filterFileClose">
+                                    <input id="filterFileClose" type="checkbox" name="sourceFileFilter" value="close" checked="checked"> close matches
+                                </label>
 
-                            <label for="filterTrue">
-                                <input id="filterTrue" type="radio" name="sourceFilter" value="true"> variables in source
-                            </label>
+                                <label for="filterFileUnlikely">
+                                    <input id="filterFileUnlikely" type="checkbox" name="sourceFileFilter" value="unlikely" checked="checked"> unlikely matches
+                                </label>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Variable matching</legend>
+                                <label for="filterAny">
+                                    <input id="filterAny" type="radio" name="sourceFilter" value="all" checked="checked"> all documented variables
+                                </label>
 
-                            <label for="filterFalse">
-                                <input id="filterFalse" type="radio" name="sourceFilter" value="false"> variables not in source
-                            </label>
+                                <label for="filterTrue">
+                                    <input id="filterTrue" type="radio" name="sourceFilter" value="true"> variables in source file
+                                </label>
+
+                                <label for="filterFalse">
+                                    <input id="filterFalse" type="radio" name="sourceFilter" value="false"> variables not in source file
+                                </label>
+                            </fieldset>
+                            
                         </div>
                         <div class="options_box">
                             <h3>Table Views</h3>
@@ -127,18 +155,18 @@
                                 Pinstripe rows
                             </label>
                             <fieldset>
-                                <legend>Wide columns should</legend>
+                                <legend>Wide columns</legend>
 
                                 <label>
-                                    <input id="wordWrap" type="radio" name="wideResp" value="wrap" checked="checked"> Wrap across lines
+                                    <input id="wordWrap" type="radio" name="wideResp" value="wrap" checked="checked"> Wrap text across lines
                                 </label>
 
                                 <label for="scrollTable">
-                                    <input id="scrollTable" type="radio" name="wideResp" value="scroll"> Fit with scrolling
+                                    <input id="scrollTable" type="radio" name="wideResp" value="scroll"> Enable horizontal scrolling
                                 </label>
 
                                 <label for="truncateCols">
-                                    <input id="truncateCols" type="radio" name="wideResp" value="truncate"> Truncate to fit
+                                    <input id="truncateCols" type="radio" name="wideResp" value="truncate"> Truncate text
                                 </label>
                             </fieldset>
 

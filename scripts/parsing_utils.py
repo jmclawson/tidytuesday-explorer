@@ -2,6 +2,7 @@ from pathlib import Path
 from zipfile import BadZipFile
 import csv
 import re
+import unicodedata
 import pandas as pd
 
 TT_DATA = "tt_data"
@@ -267,7 +268,7 @@ def build_dataset_index(directory):
         for d in section_file_map
         }
     file_to_columns = {
-        d["file"]: d["columns"]
+        d["file"]: [normalize_variable(col) for col in d["columns"]]
         for d in active_columns
         }
     all_rows = []
@@ -294,14 +295,16 @@ def build_dataset_index(directory):
             "source_match": match_status,
             "variable": item["variable"],
             "variable_norm": normalize_variable(item["variable"]),
+            "variable_class": item.get("class"),
             "variable_description": item["description"],
-            "variable_in_source": item["variable"].strip("`") in file_to_columns[this_file]
+            "variable_in_source": normalize_variable(item["variable"]) in file_to_columns[this_file]
             }
         all_rows.append(this_row)
     return all_rows
 
-def normalize_variable(col):
-    result = col.lower().strip()
+def normalize_variable(variable):
+    result = unicodedata.normalize("NFKD", variable)
+    result = result.lower().strip()
     result = re.sub(r"[^\w]+", "_", result)
     result = re.sub(r"_+", "_", result)
 
@@ -331,6 +334,7 @@ def infer_dataset_index(directory):
             "source_match": "exact",
             "variable": col,
             "variable_norm": normalize_variable(col),
+            "variable_class": None,
             "variable_description": None,
             "variable_in_source": True,
         }

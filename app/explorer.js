@@ -80,6 +80,12 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     if (document.getElementById("showVariable").checked) {
         selectedCols.push("variable");
     }
+    if (document.getElementById("showVariableNorm").checked) {
+        selectedCols.push("variable_norm");
+    }
+    if (document.getElementById("showVariableClass").checked) {
+        selectedCols.push("variable_class");
+    }
     if (document.getElementById("showDescription").checked) {
         selectedCols.push("variable_description");
     }
@@ -88,6 +94,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     }
 
     const columnsString = selectedCols.join(", ");
+    const source_file_filter = getSelectedSourceMatches();
     const source_filter = document.querySelector('input[name="sourceFilter"]:checked').value;
     const likeOperator = document.getElementById("caseInsensitive").checked ? "ILIKE" : "LIKE";
     
@@ -103,36 +110,27 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
         searchPattern = searchTerm;
     }
     
-    // console.log("Operator:", likeOperator);
-    // console.log("searchCol:", searchCol);
-    let result;
-    if (source_filter === "all") {
-        result = await conn.query(`
-            SELECT ${columnsString}
-            FROM variables
-            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-            ORDER BY dataset_id ${searchOrder}
-            LIMIT ${limitNum}
-        `);
-    } else if (source_filter === "true"){
-        result = await conn.query(`
-            SELECT ${columnsString}
-            FROM variables
-            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND variable_in_source = TRUE
-            ORDER BY dataset_id ${searchOrder}
-            LIMIT ${limitNum}
-        `);
-    } else {
-        result = await conn.query(`
-            SELECT ${columnsString}
-            FROM variables
-            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND variable_in_source = FALSE
-            ORDER BY dataset_id ${searchOrder}
-            LIMIT ${limitNum}
-        `);
+    let whereClause = "";
+    if (source_file_filter.length > 0) {
+      const values = source_file_filter.map(v => `'${v}'`).join(", ");
+      whereClause = `AND source_match IN (${values})`;
     }
+
+    if (source_filter === "all") {
+        whereClause += ""
+    } else if (source_filter === "true"){
+        whereClause += "AND variable_in_source = TRUE"
+    } else {
+        whereClause += "AND variable_in_source = FALSE"
+    }
+    let result;
+    result = await conn.query(`
+        SELECT ${columnsString}
+        FROM variables
+        WHERE ${searchCol} ${likeOperator} '${searchPattern}' ${whereClause}
+        ORDER BY dataset_id ${searchOrder}
+        LIMIT ${limitNum}
+    `);
     
     const rows = result.toArray();
     
@@ -143,27 +141,11 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
 
     // get number of results
     let n_rows_result;
-    if (source_filter === "all") {
-        n_rows_result = await conn.query(`
-            SELECT COUNT(*) as n_rows
-            FROM variables
-            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-        `)
-    } else if (source_filter === "true"){
-        n_rows_result = await conn.query(`
-            SELECT COUNT(*) as n_rows
-            FROM variables
-            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND variable_in_source = TRUE
-        `)
-    } else {
-        n_rows_result = await conn.query(`
-            SELECT COUNT(*) as n_rows
-            FROM variables
-            WHERE ${searchCol} ${likeOperator} '${searchPattern}'
-              AND variable_in_source = FALSE
-        `)
-    }
+    n_rows_result = await conn.query(`
+        SELECT COUNT(*) as n_rows
+        FROM variables
+        WHERE ${searchCol} ${likeOperator} '${searchPattern}' ${whereClause}
+    `)
     
     const n_rows = n_rows_result.toArray()[0].n_rows;
 
@@ -271,6 +253,11 @@ function renderBreadcrumb(row, drillview, nextView) {
         drillDown(row, drillview, nextView, orderDir);
         })
     return crumb
+}
+
+function getSelectedSourceMatches() {
+  const checked = document.querySelectorAll('input[name="sourceFileFilter"]:checked');
+  return Array.from(checked).map(el => el.value);
 }
 
 async function drillDown(row, drillview, nextView, searchOrder) {
@@ -482,7 +469,7 @@ document.querySelectorAll('input[name="order"]').forEach(radio => {
 });
 
 const ids = [
-    "showVariable",
+    "showVariable", "showVariableNorm", "showVariableClass",
     "showDescription",
     "showSource",
     "showSection",
@@ -491,6 +478,7 @@ const ids = [
     "showInSource",
     "caseInsensitive",
     "searchContains", "searchStarts", "searchEnds", "searchExact",
+    "filterFileExact", "filterFileClose", "filterFileUnlikely",
     "filterAny", "filterTrue", "filterFalse"
 ];
 
