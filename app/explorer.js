@@ -95,6 +95,7 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
 
     const columnsString = selectedCols.join(", ");
     const source_file_filter = getSelectedSourceMatches();
+    const class_filter = getSelectedClasses();
     const source_filter = document.querySelector('input[name="sourceFilter"]:checked').value;
     const likeOperator = document.getElementById("caseInsensitive").checked ? "ILIKE" : "LIKE";
     
@@ -123,6 +124,38 @@ async function runQuery(searchCol, searchTerm, searchOrder, limitNum) {
     } else {
         whereClause += "AND variable_in_source = FALSE"
     }
+
+    if (class_filter.length > 0) {
+      const commonClasses = [
+        "character",
+        "date",
+        "double",
+        "numeric",
+        "factor",
+        "integer",
+        "logical"
+      ];
+
+      const selectedCommons = class_filter.filter(v => v !== "others");
+      const includeOthers = class_filter.includes("others");
+
+      const parts = [];
+
+      if (selectedCommons.length > 0) {
+        const values = selectedCommons.map(v => `'${v}'`).join(", ");
+        parts.push(`variable_class IN (${values})`);
+      }
+
+      if (includeOthers) {
+        const values = commonClasses.map(v => `'${v}'`).join(", ");
+        parts.push(`(variable_class NOT IN (${values}) OR variable_class IS NULL)`);
+      }
+
+      if (parts.length > 0) {
+        whereClause += ` AND (${parts.join(" OR ")})`;
+      }
+    }
+
     let result;
     result = await conn.query(`
         SELECT ${columnsString}
@@ -257,6 +290,11 @@ function renderBreadcrumb(row, drillview, nextView) {
 
 function getSelectedSourceMatches() {
   const checked = document.querySelectorAll('input[name="sourceFileFilter"]:checked');
+  return Array.from(checked).map(el => el.value);
+}
+
+function getSelectedClasses() {
+  const checked = document.querySelectorAll('input[name="varClassFilter"]:checked');
   return Array.from(checked).map(el => el.value);
 }
 
@@ -479,6 +517,9 @@ const ids = [
     "caseInsensitive",
     "searchContains", "searchStarts", "searchEnds", "searchExact",
     "filterFileExact", "filterFileClose", "filterFileUnlikely",
+    "filterClassChar", "filterClassDouble", "filterClassNumeric", 
+    "filterClassInt", "filterClassLog", "filterClassDate", 
+    "filterClassFactor", "filterClassOther",
     "filterAny", "filterTrue", "filterFalse"
 ];
 

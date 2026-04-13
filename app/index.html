@@ -50,7 +50,7 @@
                             </label>
                             <label>
                                 <input type="checkbox" id="showSection">
-                                doc section
+                                documentation section
                             </label>
                             <label>
                                 <input type="checkbox" id="showSource">
@@ -64,12 +64,12 @@
 
                             <label>
                                 <input type="checkbox" id="showVariable" checked>
-                                variable
+                                variable name
                             </label>
 
                             <label>
                                 <input type="checkbox" id="showVariableNorm">
-                                normed variable
+                                normalized variable name
                             </label>
 
                             <label>
@@ -84,7 +84,7 @@
 
                             <label>
                                 <input type="checkbox" id="showInSource">
-                                variable in source
+                                Present in source file
                             </label>
                         
                         </div>
@@ -130,6 +130,40 @@
 
                                 <label for="filterFileUnlikely">
                                     <input id="filterFileUnlikely" type="checkbox" name="sourceFileFilter" value="unlikely" checked="checked"> unlikely matches
+                                </label>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Variable class</legend>
+                                <label for="filterClassChar">
+                                    <input id="filterClassChar" type="checkbox" name="varClassFilter" value="character" checked="checked"> character
+                                </label>
+                            
+                                <label for="filterClassDouble">
+                                    <input id="filterClassDouble" type="checkbox" name="varClassFilter" value="double" checked="checked"> double
+                                </label>
+
+                                <label for="filterClassInt">
+                                    <input id="filterClassInt" type="checkbox" name="varClassFilter" value="integer" checked="checked"> integer
+                                </label>
+
+                                <label for="filterClassNumeric">
+                                    <input id="filterClassNumeric" type="checkbox" name="varClassFilter" value="numeric" checked="checked"> numeric
+                                </label>
+
+                                <label for="filterClassLog">
+                                    <input id="filterClassLog" type="checkbox" name="varClassFilter" value="logical" checked="checked"> logical
+                                </label>
+
+                                <label for="filterClassDate">
+                                    <input id="filterClassDate" type="checkbox" name="varClassFilter" value="date" checked="checked"> date
+                                </label>
+
+                                <label for="filterClassFactor">
+                                    <input id="filterClassFactor" type="checkbox" name="varClassFilter" value="factor" checked="checked"> factor
+                                </label>
+
+                                <label for="filterClassOther">
+                                    <input id="filterClassOther" type="checkbox" name="varClassFilter" value="others" checked="checked"> (others)
                                 </label>
                             </fieldset>
                             <fieldset>

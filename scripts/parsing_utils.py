@@ -367,7 +367,7 @@ def loop_dataset_year(directory):
 def get_years(start=2018, end=2016, datadir=TT_DATA):
     all_data = [
         loop_dataset_year(f"{datadir}/{year}/")
-        for year in range(start, end)
+        for year in range(start, end + 1)
     ]
     
     all_flat = [
