@@ -13,7 +13,7 @@ label, #pathHere span::before, summary {
     text-transform: lowercase;
 }
 #search_label, #path_label {
-    padding: 1em;
+    padding: 1.2em 1em 1em 1em;
 }
 #tableHere table, #moreHere table, #innerPath {
     font-family: 'Consolas', 'Courier New', Courier, monospace;
@@ -62,7 +62,7 @@ label {
 }
 .formgroup#resultOrder {
     vertical-align: middle;
-    margin-top: 1.02em;
+    padding-top: 1.2em;
 }
 .formgroup#tweakform {
     vertical-align: top;
