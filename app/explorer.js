@@ -17,6 +17,32 @@ let meta_vars;
 let meta_files;
 let meta_sets;
 
+function ttVersion() {
+    const now = new Date();
+    const utc = new Date(Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate()
+    ));
+
+    const day = utc.getUTCDay();   // 0=Sun ... 2=Tue
+    const hour = now.getUTCHours();
+
+    let diff;
+
+    if (day > 2) {
+        diff = day - 2;
+    } else if (day === 2 && hour >= 10) {
+        diff = 0;
+    } else {
+        diff = day + 5;
+    }
+
+    utc.setUTCDate(utc.getUTCDate() - diff);
+    
+    return utc.toISOString().slice(0, 10);
+}
+
 async function setup() {
     const loading = document.getElementById("loading");
 
@@ -31,11 +57,12 @@ async function setup() {
     await db.instantiate(bundle.mainModule);
     conn = await db.connect();
 
-    const parquetUrl = new URL("./data/tt_columns.parquet", window.location.href).toString();
+    const parquetUrl = new URL("./data/tt_columns.parquet", window.location.href);
+    parquetUrl.searchParams.set("v", ttVersion());
 
     await conn.query(`
         CREATE VIEW variables AS
-        SELECT * FROM parquet_scan('${parquetUrl}')
+        SELECT * FROM parquet_scan('${parquetUrl.toString()}')
     `);
 
     const meta_vars_result = await conn.query(`
