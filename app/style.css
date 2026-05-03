@@ -19,8 +19,12 @@ label, #pathHere span::before, summary {
     font-family: 'Consolas', 'Courier New', Courier, monospace;
     margin-bottom: 1em;
 }
-#tableHere tbody tr:hover, #moreHere tbody tr:hover {
+#tableHere tbody tr:hover, #moreHere.variable tbody tr:hover {
     background-color: #eef;
+    cursor: pointer;
+}
+#moreHere.dataset_id tbody tr:hover {
+    background-color: #ddffef;
     cursor: pointer;
 }
 #tableHere th, #moreHere th, #tableHere td, #moreHere td {

@@ -359,6 +359,8 @@ async function drillDown(row, drillview, nextView, searchOrder) {
     // update table
     moreOutput.classList.remove("empty");
     moreOutput.classList.add("notempty");
+    moreOutput.classList.remove(nextView);
+    moreOutput.classList.add(drillview);
     moreOutput.innerHTML = "";
     const moreHeader = document.createElement("span");
     if (drillview === "dataset_id") {
