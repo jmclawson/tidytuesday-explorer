@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   refresh:
@@ -53,3 +55,14 @@ jobs:
 
           git diff --cached --quiet || git commit -m "Update parquet data ($(date -u +'%Y-%m-%d'))"
           git push
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./app
+
+      - name: Deploy to GitHub Pages 
+        uses: actions/deploy-pages@v4
